@@ -31,7 +31,7 @@
 
 ;;; Commentary:
 
-;; `password-menu' is a UI wrapper for the built-in Emacs `auth-source' libary.
+;; `password-menu' is a UI wrapper for the built-in Emacs `auth-source' library.
 ;; This package allows you to display auth-sources entries in the minibuffer
 ;; with either completing-read or transient. The password for the selected entry
 ;; is copied to the kill ring and system clipboard.
@@ -64,7 +64,8 @@
 
 ;;; Variables:
 
-;; Credit: https://github.com/zx2c4/password-store/blob/b5e965a838bb68c1227caa2cdd874ba496f10149/contrib/emacs/password-store.el#L291
+;; Kill ring expiration Credit:
+;; https://github.com/zx2c4/password-store/blob/b5e965a838bb68c1227caa2cdd874ba496f10149/contrib/emacs/password-store.el#L291
 
 (defvar password-menu-prefix-list nil
   "Cached password menu list.")
@@ -199,7 +200,8 @@ Returns a vector of lists."
       (eval '(transient-define-prefix password-menu-prefix () password-menu-prefix-list))))
     (password-menu-prefix))
 
-;; Credit https://arialdomartini.github.io//emacs-surround-2
+;; Completing-read with a list Credit:
+;; https://arialdomartini.github.io/emacs-surround-2
 
 ;;;###autoload
 (defun password-menu-ask-password ()
