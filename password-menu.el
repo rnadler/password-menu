@@ -141,7 +141,7 @@ character becomes non-alpha (270 --> '{0')."
           (let ((name (concat (char-to-string (+ ?A n)) "-name")))
             (push (list name "example.com") rv)))
         (reverse rv))
-    nil)
+    nil))
 
 (defun password-menu-get-sources ()
     "Get a list of all sources."
