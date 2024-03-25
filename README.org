@@ -51,17 +51,31 @@ These can be added to =config.el= as shown above.
 
 ** Password menus
 
+Menu item entries are formatted with =user=@=host=.
+
 *** Transient menu
 
-This uses keyboard selection of entries (transient prefix). Since the prefix
-ordering always matches that of the source, this method is better suited for the
-use of repeatable discreet key sequences, for example =C-x j 3=.
+=M-x password-menu-transient=
+
+[[screenshots/password-menu-transient.png]]
+
+This uses a one or two character keyboard selection of entries (transient
+prefix). Since the prefix ordering always matches that of the source, this
+method is better suited for the use of repeatable discreet key sequences, for
+example =C-x j 3=.
 
 *** Completing read menu
+
+=M-x password-menu-completing-read=
+
+[[screenshots/password-menu-completing-read.png]]
 
 Entries are found by scrolling through or searching the list. This is likely
 preferable when the list is long.
 
+*** Confirmation message
+
+~Copied password for rnadler@github.com to the kill ring and system clipboard. Will clear in 45 seconds.~
 
 * Customization
 

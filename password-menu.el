@@ -169,10 +169,10 @@ character becomes non-alpha (270 --> '{0')."
         (,@body)))
       (password-menu-get-sources)))
 
-(defmacro password-menu--selection-item (user host)
+(defmacro password-menu--selection-item ()
   "Get the selection USER and HOST item content."
   `(list
-    (concat ,user "@" ,host)
+    (concat user "@" host)
     `(lambda () (interactive) (password-menu-get-password ,user ,host))))
 
 (defun password-menu-get-prefix-list ()
@@ -183,12 +183,12 @@ Returns a vector of lists."
            (password-menu--get-source-list
             (append
              (list (password-menu-picker-string (setq picker (1+ picker))))
-             (password-menu--selection-item user host))))))
+             (password-menu--selection-item))))))
 
 (defun password-menu-get-completing-list ()
   "Get the completing list from the password sources."
   (password-menu--get-source-list
-   (password-menu--selection-item user host)))
+   (password-menu--selection-item)))
 
 ;;;###autoload
 (defun password-menu-clear-password-menu ()
