@@ -62,6 +62,11 @@
   :group 'password-menu
   :type 'string)
 
+(defcustom password-menu-sources-max 100
+  "Maximum number of sources to find."
+  :group 'password-menu
+  :type 'number)
+
 ;;; Variables:
 
 ;; Kill ring expiration Credit:
@@ -78,6 +83,8 @@
 
 (defvar password-menu--create-fake-source-data nil
   "Flag to create fake data for testing long lists.")
+
+(declare-function password-menu-prefix "password-menu")
 
 ;;; Functions:
 
@@ -150,7 +157,7 @@ character becomes non-alpha (270 --> '{0')."
      (mapcar (lambda (e) (list
                           (plist-get e :user)
                           (plist-get e :host)))
-             (auth-source-search :max 100))
+             (auth-source-search :max password-menu-sources-max))
      (password-menu--fake-source-data)))
 
 (defmacro password-menu--get-source-list (body)

@@ -45,7 +45,7 @@ These can be added to =config.el= as shown above.
 ** Disclaimers
 
 - I have only tested this with Emacs 29.1.
-- Testing of the auth-sources backends was limited to only authinfo.pgp.
+- Testing of the =auth-source= backends was limited to only authinfo.gpg.
 
 * Usage
 
@@ -53,9 +53,9 @@ These can be added to =config.el= as shown above.
 
 *** Transient menu
 
-This uses the keyboard selection of entries. Since the prefix ordering always
-matches that of the source, this method is better suited for discreet key
-sequences, for example =C-x j 3=.
+This uses keyboard selection of entries (transient prefix). Since the prefix
+ordering always matches that of the source, this method is better suited for the
+use of repeatable discreet key sequences, for example =C-x j 3=.
 
 *** Completing read menu
 
@@ -67,7 +67,8 @@ preferable when the list is long.
 
 Here are the variables that can be customized:
 
-| Variable                                      | Default              | Desc.                                                     |
+| Variable                                      |              Default | Desc.                                                     |
 |-----------------------------------------------+----------------------+-----------------------------------------------------------|
-| =password-menu-time-before-clipboard-restore= | 45                   | Number of seconds to wait before restoring the clipboard. |
+| =password-menu-time-before-clipboard-restore= |                   45 | Number of seconds to wait before restoring the clipboard. |
 | =password-menu-prompt=                        | "Get password for: " | Menu prompt string.                                       |
+| =password-menu-sources-max=                   |                  100 | Maximum number of sources to find.                        |
