@@ -75,6 +75,9 @@
 (defvar password-menu-kill-ring-pointer nil
   "The tail of of the kill ring ring whose car is the password.")
 
+(defvar password-menu--create-fake-source-data nil
+  "Flag to create fake data for testing long lists.")
+
 ;;; Functions:
 
 (defun password-menu-clear ()
@@ -97,11 +100,11 @@
   (message "Copied password for %s to the kill ring and system clipboard. Will clear in %d seconds."
                 entry password-menu-time-before-clipboard-restore)
   (setq password-menu-timeout-timer
-        (run-at-time password-menu-time-before-clipboard-restore nil 'password-menu-clear)))
+        (run-at-time password-menu-time-before-clipboard-restore nil #'password-menu-clear)))
 
 (defun password-menu-fetch-password (&rest params)
   "Fetch the password for the passed PARAMS."
-  (let ((match (car (apply 'auth-source-search params))))
+  (let ((match (car (apply #'auth-source-search params))))
     (if match
         (let ((secret (plist-get match :secret)))
           (if (functionp secret)
@@ -129,17 +132,16 @@ character becomes non-alpha (270 --> '{0')."
             (if (<= num div) "" (char-to-string (+ ?a (1- i))))
             rem)))
 
-;; For testing.
-(defun password-menu-fake-source-data ()
+(defun password-menu--fake-source-data ()
   "Create fake source data."
-  ;; (let ((count 50)
-  ;;       (rv ()))
-  ;;   (dotimes (n count)
-  ;;     (let ((name (concat (char-to-string (+ ?A n)) "-name")))
-  ;;       (push (list name "example.com") rv)))
-  ;;   (reverse rv))
-  nil
-  )
+  (if password-menu--create-fake-source-data
+      (let ((count 50)
+            (rv ()))
+        (dotimes (n count)
+          (let ((name (concat (char-to-string (+ ?A n)) "-name")))
+            (push (list name "example.com") rv)))
+        (reverse rv))
+    nil)
 
 (defun password-menu-get-sources ()
     "Get a list of all sources."
@@ -148,7 +150,7 @@ character becomes non-alpha (270 --> '{0')."
                           (plist-get e :user)
                           (plist-get e :host)))
              (auth-source-search :max 100))
-     (password-menu-fake-source-data)))
+     (password-menu--fake-source-data)))
 
 (defmacro password-menu--get-source-list (body)
   "Get the source list from the password sources with BODY content."
@@ -169,7 +171,7 @@ character becomes non-alpha (270 --> '{0')."
   "Get the transient prefix list from the password sources.
 Returns a vector of lists."
   (let ((picker 0))
-    (apply 'vector
+    (apply #'vector
            (password-menu--get-source-list
             (append
              (list (password-menu-picker-string (setq picker (1+ picker))))
@@ -198,6 +200,7 @@ Returns a vector of lists."
     (password-menu-prefix))
 
 ;; Credit https://arialdomartini.github.io//emacs-surround-2
+
 ;;;###autoload
 (defun password-menu-ask-password ()
   "Popup list of user@host entries to select from."
