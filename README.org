@@ -51,7 +51,7 @@ These can be added to =config.el= as shown above.
 
 ** Password menus
 
-Menu item entries are formatted with =user=@=host=.
+Menu item entries are formatted with =user@host=.
 
 *** Transient menu
 
@@ -81,8 +81,8 @@ preferable when the list is long.
 
 Here are the variables that can be customized:
 
-| Variable                                      |              Default | Desc.                                                     |
-|-----------------------------------------------+----------------------+-----------------------------------------------------------|
-| =password-menu-time-before-clipboard-restore= |                   45 | Number of seconds to wait before restoring the clipboard. |
-| =password-menu-prompt=                        | "Get password for: " | Menu prompt string.                                       |
-| =password-menu-sources-max=                   |                  100 | Maximum number of sources to find.                        |
+| Variable                                      |              Default | Desc.                                                                                                                            |
+|-----------------------------------------------+----------------------+----------------------------------------------------------------------------------------------------------------------------------|
+| =password-menu-time-before-clipboard-restore= |                   45 | Number of seconds to wait before restoring the clipboard. Can also be set with the PASSWORD_MENU_CLIP_TIME environment variable. |
+| =password-menu-prompt=                        | "Get password for: " | Menu prompt string.                                                                                                              |
+| =password-menu-sources-max=                   |                  100 | Maximum number of sources to find.                                                                                               |
