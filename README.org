@@ -6,10 +6,11 @@
 
 * Description :unfold:
 
-*password-menu* is a UI wrapper for the built-in Emacs [[https://www.gnu.org/software/emacs/manual/html_mono/auth.html][auth-source]] library.
-This package allows you to display auth-source entries in the minibuffer with
-either =completing-read= or =transient=. The password for the selected entry is
-copied to the kill ring and system clipboard and automatically removed later.
+*password-menu* is a UI wrapper ("porcelain") for the built-in Emacs [[https://www.gnu.org/software/emacs/manual/html_mono/auth.html][auth-source]]
+secrets library. This package allows you to display auth-source entries in the
+minibuffer with either =completing-read= or =transient=. The password for the
+selected entry is copied to the kill ring and system clipboard and automatically
+removed later.
 
 * Installation
 
