@@ -70,8 +70,8 @@
 
 ;;; Variables:
 
-;; Kill ring expiration Credit:
-;; https://github.com/zx2c4/password-store/blob/b5e965a838bb68c1227caa2cdd874ba496f10149/contrib/emacs/password-store.el#L291
+;; Kill ring  and clipboard expiration. Credit:
+;; https://github.com/zx2c4/password-store/blob/master/contrib/emacs/password-store.el#L291
 
 (defvar password-menu-prefix-list nil
   "Cached password menu list.")
@@ -208,7 +208,7 @@ Returns a vector of lists."
       (eval '(transient-define-prefix password-menu-prefix () password-menu-prefix-list))))
     (password-menu-prefix))
 
-;; Completing-read with a list Credit:
+;; Completing-read with a list. Credit:
 ;; https://arialdomartini.github.io/emacs-surround-2
 
 ;;;###autoload
