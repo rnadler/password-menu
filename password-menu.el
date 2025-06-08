@@ -1,10 +1,10 @@
 ;;; password-menu.el --- Password Menu for auth-source secrets  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024 Robert Nadler <robert.nadler@gmail.com>
+;; Copyright (C) 2024-2025 Robert Nadler <robert.nadler@gmail.com>
 
 ;; Author: Robert Nadler <robert.nadler@gmail.com>
-;; Version: 0.1.0
-;; Package-Requires: ((emacs "28.1"))
+;; Version: 0.1.1
+;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: news
 ;; URL: https://github.com/rnadler/password-menu
 
@@ -73,19 +73,11 @@
 ;; Kill ring  and clipboard expiration. Credit:
 ;; https://github.com/zx2c4/password-store/blob/master/contrib/emacs/password-store.el#L291
 
-(defvar password-menu-prefix-list nil
-  "Cached password menu list.")
-
 (defvar password-menu-timeout-timer nil
   "Timer for clearing clipboard.")
 
 (defvar password-menu-kill-ring-pointer nil
   "The tail of of the kill ring ring whose car is the password.")
-
-(defvar password-menu--create-fake-source-data nil
-  "Flag to create fake data for testing long lists.")
-
-(declare-function password-menu-prefix "password-menu")
 
 ;;; Functions:
 
@@ -141,25 +133,12 @@ character becomes non-alpha (270 --> '{0')."
             (if (<= num div) "" (char-to-string (+ ?a (1- i))))
             rem)))
 
-(defun password-menu--fake-source-data ()
-  "Create fake source data."
-  (if password-menu--create-fake-source-data
-      (let ((count 50)
-            (rv ()))
-        (dotimes (n count)
-          (let ((name (concat (char-to-string (+ ?A n)) "-name")))
-            (push (list name "example.com") rv)))
-        (reverse rv))
-    nil))
-
 (defun password-menu-get-sources ()
     "Get a list of all sources."
-    (append
-     (mapcar (lambda (e) (list
-                          (plist-get e :user)
-                          (plist-get e :host)))
-             (auth-source-search :max password-menu-sources-max))
-     (password-menu--fake-source-data)))
+    (mapcar (lambda (e) (list
+                         (plist-get e :user)
+                         (plist-get e :host)))
+            (auth-source-search :max password-menu-sources-max)))
 
 (defmacro password-menu--get-source-list (body)
   "Get the source list from the password sources with BODY content."
@@ -195,18 +174,22 @@ Returns a vector of lists."
 (defun password-menu-clear-password-menu ()
   "Clear the password transient menu."
   (interactive)
-  (setq password-menu-prefix-list nil)
   (auth-source-forget-all-cached))
+
+;;;###autoload (autoload 'password-menu-prefix "password-menu-prefix" nil t)
+(transient-define-prefix password-menu-prefix ()
+  [:class transient-column
+   :description (lambda () password-menu-prompt)
+   :setup-children (lambda (_)
+                     (transient-parse-suffixes
+                      'password-menu
+                      (password-menu-get-prefix-list)))])
 
 ;;;###autoload
 (defun password-menu-transient ()
   "Show the password transient menu."
   (interactive)
-  (when (not password-menu-prefix-list)
-    (progn
-      (setq password-menu-prefix-list (vconcat (vector password-menu-prompt) (password-menu-get-prefix-list)))
-      (eval '(transient-define-prefix password-menu-prefix () password-menu-prefix-list))))
-    (password-menu-prefix))
+  (password-menu-prefix))
 
 ;; Completing-read with a list. Credit:
 ;; https://arialdomartini.github.io/emacs-surround-2

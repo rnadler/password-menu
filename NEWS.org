@@ -1,5 +1,11 @@
 #+TITLE: Changes
 
+*** 0.1.1 (2025-06-08)
+
+- No functional changes
+- Transient prefix changes per https://github.com/magit/transient/issues/393
+- Remove fake password list code
+
 *** 0.1.0 (2024-03-31)
 
 - Initial release

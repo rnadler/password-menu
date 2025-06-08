@@ -45,7 +45,7 @@ These can be added to =config.el= as shown above.
 
 ** Disclaimers
 
-- I have only tested this with Emacs 29.1.
+- I have only tested this with Emacs 29.1 and above.
 - Testing of the =auth-source= backends was limited to only authinfo.gpg.
 
 * Usage
