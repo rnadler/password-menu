@@ -54,9 +54,12 @@
   (if (getenv "PASSWORD_MENU_CLIP_TIME")
       (string-to-number (getenv "PASSWORD_MENU_CLIP_TIME"))
     45)
-  "Number of seconds to wait before restoring the clipboard."
+  "Number of seconds to wait before restoring the clipboard.
+
+Set to nil will never restore from the clipboard."
   :group 'password-menu
-  :type 'number)
+  :type '(choice number
+                 (const nil)))
 
 (defcustom password-menu-prompt "Get password for: "
   "Password menu prompt string."
@@ -98,10 +101,14 @@
   (password-menu-clear)
   (kill-new secret)
   (setq password-menu-kill-ring-pointer kill-ring-yank-pointer)
-  (message "Copied password for %s to the kill ring and system clipboard. Will clear in %d seconds."
-                entry password-menu-time-before-clipboard-restore)
-  (setq password-menu-timeout-timer
-        (run-at-time password-menu-time-before-clipboard-restore nil #'password-menu-clear)))
+  (if password-menu-time-before-clipboard-restore
+      (progn
+        (message "Copied password for %s to the kill ring and system clipboard. Will clear in %d seconds."
+                 entry password-menu-time-before-clipboard-restore)
+        (setq password-menu-timeout-timer
+              (run-at-time password-menu-time-before-clipboard-restore nil #'password-menu-clear)))
+    (message "Copied password for %s to the kill ring and system clipboard."
+             entry)))
 
 (defun password-menu-fetch-password (&rest params)
   "Fetch the password for the passed PARAMS."
@@ -114,12 +121,12 @@
       (error "Password not found for %S" params))))
 
 (defun password-menu-get-password (name host)
-    "Put password for user NAME and HOST on the kill ring."
-    (let ((password (password-menu-fetch-password :user name :host host))
-          (name-pw (concat name "@" host)))
-      (if password
-          (password-menu--save-field-in-kill-ring password name-pw)
-        (message "Password not found for %s" name-pw))))
+  "Put password for user NAME and HOST on the kill ring."
+  (let ((password (password-menu-fetch-password :user name :host host))
+        (name-pw (concat name "@" host)))
+    (if password
+        (password-menu--save-field-in-kill-ring password name-pw)
+      (message "Password not found for %s" name-pw))))
 
 (defun password-menu-picker-string (num)
   "Get list picker string for NUM.
@@ -134,11 +141,11 @@ character becomes non-alpha (270 --> '{0')."
             rem)))
 
 (defun password-menu-get-sources ()
-    "Get a list of all sources."
-    (mapcar (lambda (e) (list
-                         (plist-get e :user)
-                         (plist-get e :host)))
-            (auth-source-search :max password-menu-sources-max)))
+  "Get a list of all sources."
+  (mapcar (lambda (e) (list
+                       (plist-get e :user)
+                       (plist-get e :host)))
+          (auth-source-search :max password-menu-sources-max)))
 
 (defmacro password-menu--get-source-list (body)
   "Get the source list from the password sources with BODY content."
@@ -147,7 +154,7 @@ character becomes non-alpha (270 --> '{0')."
       (let ((user (nth 0 source))
             (host (nth 1 source)))
         (,@body)))
-      (password-menu-get-sources)))
+    (password-menu-get-sources)))
 
 (defmacro password-menu--selection-item ()
   "Get the selection USER and HOST item content."
@@ -179,11 +186,11 @@ Returns a vector of lists."
 ;;;###autoload (autoload 'password-menu-prefix "password-menu-prefix" nil t)
 (transient-define-prefix password-menu-prefix ()
   [:class transient-column
-   :description (lambda () password-menu-prompt)
-   :setup-children (lambda (_)
-                     (transient-parse-suffixes
-                      'password-menu
-                      (password-menu-get-prefix-list)))])
+          :description (lambda () password-menu-prompt)
+          :setup-children (lambda (_)
+                            (transient-parse-suffixes
+                             'password-menu
+                             (password-menu-get-prefix-list)))])
 
 ;;;###autoload
 (defun password-menu-transient ()
