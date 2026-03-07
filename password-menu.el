@@ -3,7 +3,7 @@
 ;; Copyright (C) 2024-2025 Robert Nadler <robert.nadler@gmail.com>
 
 ;; Author: Robert Nadler <robert.nadler@gmail.com>
-;; Version: 0.1.1
+;; Version: 0.2.0
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: news
 ;; URL: https://github.com/rnadler/password-menu
@@ -55,11 +55,10 @@
       (string-to-number (getenv "PASSWORD_MENU_CLIP_TIME"))
     45)
   "Number of seconds to wait before restoring the clipboard.
-
-Set to nil will never restore from the clipboard."
+If nil or <= 0 the password is never removed from the clipboard."
   :group 'password-menu
   :type '(choice number
-                 (const nil)))
+          (const nil)))
 
 (defcustom password-menu-prompt "Get password for: "
   "Password menu prompt string."
@@ -101,14 +100,14 @@ Set to nil will never restore from the clipboard."
   (password-menu-clear)
   (kill-new secret)
   (setq password-menu-kill-ring-pointer kill-ring-yank-pointer)
-  (if password-menu-time-before-clipboard-restore
-      (progn
-        (message "Copied password for %s to the kill ring and system clipboard. Will clear in %d seconds."
-                 entry password-menu-time-before-clipboard-restore)
-        (setq password-menu-timeout-timer
-              (run-at-time password-menu-time-before-clipboard-restore nil #'password-menu-clear)))
-    (message "Copied password for %s to the kill ring and system clipboard."
-             entry)))
+  (let ((msg (format "Copied password for %s to the kill ring and system clipboard." entry)))
+    (if (and password-menu-time-before-clipboard-restore
+             (> password-menu-time-before-clipboard-restore 0))
+        (progn
+          (message "%s Will clear in %d seconds." msg password-menu-time-before-clipboard-restore)
+          (setq password-menu-timeout-timer
+                (run-at-time password-menu-time-before-clipboard-restore nil #'password-menu-clear)))
+        (message msg))))
 
 (defun password-menu-fetch-password (&rest params)
   "Fetch the password for the passed PARAMS."

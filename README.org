@@ -84,6 +84,6 @@ Here are the variables that can be customized:
 
 | Variable                                      |              Default | Desc.                                                                                                                            |
 |-----------------------------------------------+----------------------+----------------------------------------------------------------------------------------------------------------------------------|
-| =password-menu-time-before-clipboard-restore= |                   45 | Number of seconds to wait before restoring the clipboard. Can also be set with the PASSWORD_MENU_CLIP_TIME environment variable. |
+| =password-menu-time-before-clipboard-restore= |                   45 | Number of seconds to wait before restoring the clipboard. If nil or <= 0 the password is never removed from the clipboard. Can also be set with the PASSWORD_MENU_CLIP_TIME environment variable.                               |
 | =password-menu-prompt=                        | "Get password for: " | Menu prompt string.                                                                                                              |
 | =password-menu-sources-max=                   |                  100 | Maximum number of sources to find.                                                                                               |

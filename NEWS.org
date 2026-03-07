@@ -1,5 +1,9 @@
 #+TITLE: Changes
 
+*** 0.2.0 (2026-03-07)
+
+- If the restore timeout is nil or <= 0 the password is never removed from the clipboard. Thanks to @jcs090218 !
+  
 *** 0.1.1 (2025-06-08)
 
 - No functional changes
